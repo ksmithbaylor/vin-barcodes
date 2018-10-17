@@ -1,32 +1,91 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.VinButtons {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+}
+
+button {
+  width: 150px;
+  height: 50px;
+  background-color: green;
   color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 32px;
+  outline: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  transition: box-shadow 300ms ease;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11),
+    0 5px 15px 0 rgba(0, 0, 0, 0.08);
 }
 
-@keyframes App-logo-spin {
-  from {
+button:active {
+  background-color: darkgreen;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+}
+
+.BarcodeDisplay {
+  margin-top: 2rem;
+  height: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+footer {
+  text-align: center;
+  position: absolute;
+  bottom: 1rem;
+  left: 2rem;
+  right: 2rem;
+}
+
+/* Copied from a codepen: https://codepen.io/claviska/pen/MoLWbj */
+.spinner {
+  /* Spinner size and color */
+  width: 1.5rem;
+  height: 1.5rem;
+  border-top-color: #444;
+  border-left-color: #444;
+
+  /* Additional spinner styles */
+  animation: spinner 400ms linear infinite;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+}
+/* Animation styles */
+@keyframes spinner {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
