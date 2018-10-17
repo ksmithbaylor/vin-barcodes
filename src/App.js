@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import Barcode from 'react-barcode';
 import './App.css';
 
-const randomVinUrl = type =>
-  `https://cors-anywhere.herokuapp.com/randomvin.com/getvin.php?type=${type}`;
+const randomVinUrl = type => `/.netlify/functions/randomVin?type=${type}`;
 
 class App extends Component {
   state = {
