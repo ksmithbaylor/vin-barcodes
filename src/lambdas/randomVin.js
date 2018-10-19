@@ -1,22 +1,16 @@
 import 'isomorphic-fetch';
+import { saveVIN, countVINs, success, failure } from '../lambda-helpers';
 
-export function handler(event, context, callback) {
-  const { type } = event.queryStringParameters;
+const getVin = type =>
+  fetch(`http://randomvin.com/getvin.php?type=${type}`).then(res => res.text());
 
-  fetch(`http://randomvin.com/getvin.php?type=${type}`)
-    .then(response => response.text())
-    .then(vin => {
-      callback(null, {
-        statusCode: 200,
-        body: vin
-      });
-    })
-    .catch(err => {
-      callback(null, {
-        statusCode: 500,
-        body: JSON.stringify({
-          error: 'something went wrong'
-        })
-      });
-    });
+export async function handler(event) {
+  try {
+    const vin = await getVin(event.queryStringParameters.type);
+    await saveVIN(vin);
+    const total = await countVINs();
+    return success({ vin, total });
+  } catch (err) {
+    return failure(err);
+  }
 }

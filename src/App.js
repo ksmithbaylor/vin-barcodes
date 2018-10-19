@@ -2,26 +2,37 @@ import React, { Component } from 'react';
 import Barcode from 'react-barcode';
 import './App.css';
 
-const randomVinUrl = type => `/.netlify/functions/randomVin?type=${type}`;
+const fetchVin = type =>
+  fetch(`/.netlify/functions/randomVin?type=${type}`).then(res => res.json());
+
+const fetchTotal = () =>
+  fetch('/.netlify/functions/totalCount')
+    .then(res => res.json())
+    .then(json => json.total);
 
 class App extends Component {
   state = {
     vin: null,
+    total: null,
     loading: false
   };
 
-  fetchVin(type) {
-    console.log('fetching', type);
-    this.setState({ loading: true }, () => {
-      fetch(randomVinUrl(type))
-        .then(response => response.text())
-        .then(vin => {
-          this.setState({ vin, loading: false });
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    });
+  async componentDidMount() {
+    try {
+      this.setState({ total: await fetchTotal() });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async fetchVin(type) {
+    try {
+      this.setState({ loading: true });
+      const updates = await fetchVin(type);
+      this.setState({ loading: false, ...updates });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   handleReal = this.fetchVin.bind(this, 'real');
@@ -32,7 +43,7 @@ class App extends Component {
       <div className="App">
         <VinButtons onReal={this.handleReal} onFake={this.handleFake} />
         <BarcodeDisplay vin={this.state.vin} loading={this.state.loading} />
-        <Info />
+        <Info total={this.state.total} />
       </div>
     );
   }
@@ -56,7 +67,7 @@ function BarcodeDisplay({ vin, loading }) {
   return <div className="BarcodeDisplay">{contents}</div>;
 }
 
-function Info() {
+function Info({ total }) {
   const randomVinLink = (
     <a href="http://randomvin.com" target="_blank" rel="noopener noreferrer">
       RandomVIN.com
@@ -73,10 +84,12 @@ function Info() {
     </a>
   );
 
+  const countInfo = total !== null ? ` ${total} VINs fetched so far!` : '';
+
   return (
     <footer>
       Driven by {randomVinLink}. Made by Kevin Smith, who was tired of Googling
-      "vin barcode" during development. Code on {githubLink}.
+      "vin barcode" during development. Code on {githubLink}.{countInfo}
     </footer>
   );
 }

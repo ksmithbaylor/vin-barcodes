@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^6.1.0",
+    "dynamodb-local": "^0.0.22",
+    "dynamoose": "^1.0.1",
     "isomorphic-fetch": "^2.2.1",
     "netlify-lambda": "^1.0.2",
     "react": "^16.5.2",
@@ -13,7 +16,8 @@
   "scripts": {
     "start": "run-p start:**",
     "start:frontend": "react-scripts start",
-    "start:backend": "netlify-lambda serve src/lambdas",
+    "start:backend": "node -r dotenv/config ./node_modules/.bin/netlify-lambda serve src/lambdas",
+    "start:dynamo": "node -r dotenv/config scripts/start-dynamo.js",
     "build": "run-p build:**",
     "build:frontend": "react-scripts build",
     "build:backend": "netlify-lambda build src/lambdas",
