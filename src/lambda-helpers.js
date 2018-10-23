@@ -18,7 +18,7 @@ export const countVINs = () =>
   VIN.scan()
     .count()
     .exec()
-    .then(counts => counts[0]);
+    .then(counts => counts[0] + 62);
 
 // Lambda return helpers
 
