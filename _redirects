@@ -1,2 +1,2 @@
 # Redirect default Netlify subdomain to primary domain
-http://vin-barcodes.netlify.com/* http://www.randomvinbarcode.com/:splat 301!
+https://vin-barcodes.netlify.com/* https://www.randomvinbarcode.com/:splat 301!
