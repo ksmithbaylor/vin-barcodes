@@ -84,12 +84,14 @@ function Info({ total }) {
     </a>
   );
 
-  const countInfo = total !== null ? ` ${total} VINs fetched so far!` : '';
+  const countInfo =
+    total !== null ? `${total} VINs fetched so far!` : <>&nbsp;</>;
 
   return (
     <footer>
       Driven by {randomVinLink}. Made by Kevin Smith, who was tired of Googling
-      "vin barcode" during development. Code on {githubLink}.{countInfo}
+      "vin barcode" during development. Code on {githubLink}.<br />
+      {countInfo}
     </footer>
   );
 }
