@@ -2,6 +2,12 @@ import dynamoose from 'dynamoose';
 
 // Dynamo setup and queries
 
+dynamoose.AWS.config.update({
+  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
 if (process.env.LOCAL) {
   dynamoose.local(`http://localhost:${process.env.DYNAMO_LOCAL_PORT}`);
 }
