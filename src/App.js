@@ -19,7 +19,7 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      this.setState({ total: await fetchTotal() });
+      this.handleReal();
     } catch (err) {
       console.error(err);
     }
