@@ -20,7 +20,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    window.addEventListener('popstate', this.matchStateToURL.bind(this))
+    window.addEventListener('popstate', this.matchStateToURL)
     try {
       const pathVIN = getVINfromPath(window.location.pathname)
       pathVIN ? this.setState({ vin: pathVIN }) : this.handleReal();
@@ -40,7 +40,7 @@ class App extends Component {
     }
   }
 
-  matchStateToURL(event) {
+  matchStateToURL = (event) => {
     const pathVIN = getVINfromPath(event.target.location.pathname);
     this.setState({ vin: pathVIN })
   }
