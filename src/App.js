@@ -10,6 +10,8 @@ const fetchTotal = () =>
     .then(res => res.json())
     .then(json => json.total);
 
+const getVINfromPath = (path) => path.split('/').slice(-1)[0]
+
 class App extends Component {
   state = {
     vin: null,
@@ -18,8 +20,10 @@ class App extends Component {
   };
 
   async componentDidMount() {
+    window.addEventListener('popstate', this.matchStateToURL)
     try {
-      this.handleReal();
+      const pathVIN = getVINfromPath(window.location.pathname)
+      pathVIN ? this.setState({ vin: pathVIN }) : this.handleReal();
     } catch (err) {
       console.error(err);
     }
@@ -30,9 +34,15 @@ class App extends Component {
       this.setState({ loading: true });
       const updates = await fetchVin(type);
       this.setState({ loading: false, ...updates });
+      window.history.pushState({}, document.title, `/vin/${updates.vin}`);
     } catch (err) {
       console.error(err);
     }
+  }
+
+  matchStateToURL = (event) => {
+    const pathVIN = getVINfromPath(event.target.location.pathname);
+    this.setState({ vin: pathVIN })
   }
 
   handleReal = this.fetchVin.bind(this, 'real');
