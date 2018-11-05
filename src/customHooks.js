@@ -11,7 +11,7 @@ export const useLoadingState = () => {
 };
 
 export const useUrlSync = (desiredURL, update) => {
-  // url -> vin
+  // url -> state
   useEventListener('popstate', event => update(event.target.location.pathname));
 
   // state -> url
