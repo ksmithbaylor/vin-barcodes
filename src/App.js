@@ -66,52 +66,45 @@ class App extends Component {
   }
 }
 
-function VinButtons({ onReal, onFake, onManual }) {
-  return (
-    <div className="VinButtons">
-      <button onClick={onFake}>Fake</button>
-      <button onClick={onReal}>Real</button>
-      <button onClick={onManual}>Manual</button>
-    </div>
-  );
-}
+const VinButtons = ({ onReal, onFake, onManual }) => (
+  <div className="VinButtons">
+    <button onClick={onFake}>Fake</button>
+    <button onClick={onReal}>Real</button>
+    <button onClick={onManual}>Manual</button>
+  </div>
+);
 
-function BarcodeDisplay({ vin, loading }) {
-  const contents = loading ? (
-    <div className="spinner" />
-  ) : !vin ? null : (
-    <Barcode value={vin} />
-  );
-  return <div className="BarcodeDisplay">{contents}</div>;
-}
+const BarcodeDisplay = ({ vin, loading }) => (
+  <div className="BarcodeDisplay">
+    {loading ? (
+      <div className="spinner" />
+    ) : !vin ? null : (
+      <Barcode value={vin} />
+    )}
+  </div>
+);
 
-function Info() {
-  return (
-    <footer>
-      Driven by <RandomVinLink />. Made by Kevin Smith. Code on <GitHubLink />.
-      <br />
-    </footer>
-  );
-}
+const Info = () => (
+  <footer>
+    Driven by <RandomVinLink />. Made by Kevin Smith. Code on <GitHubLink />.
+    <br />
+  </footer>
+);
 
-function RandomVinLink() {
-  return (
-    <a href="http://randomvin.com" target="_blank" rel="noopener noreferrer">
-      RandomVIN.com
-    </a>
-  );
-}
+const RandomVinLink = () => (
+  <a href="http://randomvin.com" target="_blank" rel="noopener noreferrer">
+    RandomVIN.com
+  </a>
+);
 
-function GitHubLink() {
-  return (
-    <a
-      href="https://github.com/ksmithbaylor/vin-barcodes"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      GitHub
-    </a>
-  );
-}
+const GitHubLink = () => (
+  <a
+    href="https://github.com/ksmithbaylor/vin-barcodes"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    GitHub
+  </a>
+);
 
 export default App;
