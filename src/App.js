@@ -22,7 +22,12 @@ export default () => {
       <VinButtons
         onReal={() => loadVin('real')}
         onFake={() => loadVin('fake')}
-        onManual={() => setVin(window.prompt('Enter VIN') || null)}
+        onManual={() => {
+          const vin = window.prompt('Enter VIN');
+          if (vin !== null) {
+            setVin(vin);
+          }
+        }}
       />
       <BarcodeDisplay vin={vin} loading={loading} />
       <Info />
