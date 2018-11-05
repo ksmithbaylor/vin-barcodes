@@ -15,7 +15,6 @@
     "start": "run-p start:**",
     "start:frontend": "react-scripts start",
     "start:backend": "node -r dotenv/config ./node_modules/.bin/netlify-lambda serve src/lambdas",
-    "start:dynamo": "node -r dotenv/config scripts/start-dynamo.js",
     "build": "run-p build:**",
     "build:frontend": "react-scripts build",
     "build:backend": "netlify-lambda build src/lambdas",
@@ -34,7 +33,6 @@
   "devDependencies": {
     "babel-loader": "^8.0.4",
     "dotenv": "^6.1.0",
-    "dynamodb-local": "^0.0.22",
     "http-proxy-middleware": "^0.19.0",
     "npm-run-all": "^4.1.3"
   }
