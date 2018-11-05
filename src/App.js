@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
 import './App.css';
 
@@ -7,64 +7,72 @@ const fetchVin = type =>
     .then(res => res.json())
     .then(({ vin }) => vin);
 
-const getVINfromPath = path => path.split('/').slice(-1)[0];
+const getVINfromPath = (path = window.location.pathname) =>
+  path.split('/').slice(-1)[0] || null;
 
-class App extends Component {
-  state = {
-    vin: null,
-    loading: false
-  };
+const App = () => {
+  const [vin, setVin] = useState(getVINfromPath());
+  const [loading, setLoading] = useState(false);
 
-  async componentDidMount() {
-    window.addEventListener('popstate', this.matchStateToURL);
+  const loadVin = async type => {
     try {
-      const pathVIN = getVINfromPath(window.location.pathname);
-      pathVIN ? this.setState({ vin: pathVIN }) : this.handleReal();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async fetchVin(type) {
-    try {
-      this.setState({ loading: true });
+      setLoading(true);
       const vin = await fetchVin(type);
-      this.setState({ loading: false, vin });
-      window.history.pushState({}, document.title, `/vin/${vin}`);
+      setVin(vin);
+      setLoading(false);
     } catch (err) {
       console.error(err);
     }
-  }
-
-  matchStateToURL = event => {
-    const pathVIN = getVINfromPath(event.target.location.pathname);
-    this.setState({ vin: pathVIN });
   };
 
-  handleReal = this.fetchVin.bind(this, 'real');
-  handleFake = this.fetchVin.bind(this, 'fake');
-
-  handleManual = () => {
+  const handleReal = loadVin.bind(null, 'real');
+  const handleFake = loadVin.bind(null, 'fake');
+  const handleManual = () => {
     const vin = window.prompt('Enter VIN');
     if (vin) {
-      this.setState({ vin });
+      setVin(vin);
     }
   };
 
-  render() {
-    return (
-      <div className="App">
-        <VinButtons
-          onReal={this.handleReal}
-          onFake={this.handleFake}
-          onManual={this.handleManual}
-        />
-        <BarcodeDisplay vin={this.state.vin} loading={this.state.loading} />
-        <Info />
-      </div>
-    );
-  }
-}
+  // On mount, get a vin if there wasn't already one in the path
+  useEffect(() => {
+    if (!vin) {
+      handleReal();
+    }
+  }, []);
+
+  // Make sure URL matches the current vin
+  useEffect(() => {
+    const desiredURL = vin ? `/vin/${vin}` : '/';
+    if (window.location.pathname !== desiredURL) {
+      window.history.pushState({}, document.title, desiredURL);
+    }
+  });
+
+  // Listen for the back button to keep the vin in sync
+  useEffect(
+    () => {
+      const matchStateToURL = event => {
+        setVin(getVINfromPath(event.target.location.pathname));
+      };
+      window.addEventListener('popstate', matchStateToURL);
+      return () => window.removeEventListener('popstate', matchStateToURL);
+    },
+    [vin]
+  );
+
+  return (
+    <div className="App">
+      <VinButtons
+        onReal={handleReal}
+        onFake={handleFake}
+        onManual={handleManual}
+      />
+      <BarcodeDisplay vin={vin} loading={loading} />
+      <Info />
+    </div>
+  );
+};
 
 const VinButtons = ({ onReal, onFake, onManual }) => (
   <div className="VinButtons">
