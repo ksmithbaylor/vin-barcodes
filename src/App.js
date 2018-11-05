@@ -86,13 +86,24 @@ function BarcodeDisplay({ vin, loading }) {
 }
 
 function Info() {
-  const randomVinLink = (
+  return (
+    <footer>
+      Driven by <RandomVinLink />. Made by Kevin Smith. Code on <GitHubLink />.
+      <br />
+    </footer>
+  );
+}
+
+function RandomVinLink() {
+  return (
     <a href="http://randomvin.com" target="_blank" rel="noopener noreferrer">
       RandomVIN.com
     </a>
   );
+}
 
-  const githubLink = (
+function GitHubLink() {
+  return (
     <a
       href="https://github.com/ksmithbaylor/vin-barcodes"
       target="_blank"
@@ -100,13 +111,6 @@ function Info() {
     >
       GitHub
     </a>
-  );
-
-  return (
-    <footer>
-      Driven by {randomVinLink}. Made by Kevin Smith, who was tired of Googling
-      "vin barcode" during development. Code on {githubLink}.<br />
-    </footer>
   );
 }
 
