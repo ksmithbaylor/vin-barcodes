@@ -44,10 +44,21 @@ class App extends Component {
   handleReal = this.fetchVin.bind(this, 'real');
   handleFake = this.fetchVin.bind(this, 'fake');
 
+  handleManual = () => {
+    const vin = window.prompt('Enter VIN');
+    if (vin) {
+      this.setState({ vin });
+    }
+  };
+
   render() {
     return (
       <div className="App">
-        <VinButtons onReal={this.handleReal} onFake={this.handleFake} />
+        <VinButtons
+          onReal={this.handleReal}
+          onFake={this.handleFake}
+          onManual={this.handleManual}
+        />
         <BarcodeDisplay vin={this.state.vin} loading={this.state.loading} />
         <Info />
       </div>
@@ -55,11 +66,12 @@ class App extends Component {
   }
 }
 
-function VinButtons({ onReal, onFake }) {
+function VinButtons({ onReal, onFake, onManual }) {
   return (
     <div className="VinButtons">
-      <button onClick={onFake}>Fake VIN</button>
-      <button onClick={onReal}>Real VIN</button>
+      <button onClick={onFake}>Fake</button>
+      <button onClick={onReal}>Real</button>
+      <button onClick={onManual}>Manual</button>
     </div>
   );
 }

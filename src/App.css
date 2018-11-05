@@ -23,14 +23,15 @@ body {
 }
 
 button {
-  width: 150px;
+  width: 0;
   height: 50px;
+  flex-grow: 1;
   background-color: green;
   cursor: pointer;
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 32px;
+  font-size: 24px;
   outline: none;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
   transition: box-shadow 300ms ease;
@@ -47,6 +48,25 @@ button:active {
   box-shadow: none;
 }
 
+button + button {
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 450px) {
+  .VinButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  button {
+    width: 85%;
+    margin-left: 0 !important;
+  }
+
+  button + button {
+    margin-top: 0.5rem;
+  }
+}
 .BarcodeDisplay {
   margin-top: 2rem;
   height: 145px;
