@@ -2,71 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
 import './App.css';
 
-const fetchVin = type =>
-  fetch(`/.netlify/functions/randomVin?type=${type}`)
-    .then(res => res.json())
-    .then(({ vin }) => vin);
+export default () => {
+  const [vin, setVin] = useState(vinFromPath());
+  const [loading, withLoadingState] = useLoadingState();
+  const loadVin = type => withLoadingState(() => fetchVin(type).then(setVin));
 
-const getVINfromPath = (path = window.location.pathname) =>
-  path.split('/').slice(-1)[0] || null;
+  // Keep the url in sync with the displayed vin
+  useUrlSync(vin, setVin);
 
-const App = () => {
-  const [vin, setVin] = useState(getVINfromPath());
-  const [loading, setLoading] = useState(false);
-
-  const loadVin = async type => {
-    try {
-      setLoading(true);
-      const vin = await fetchVin(type);
-      setVin(vin);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleReal = loadVin.bind(null, 'real');
-  const handleFake = loadVin.bind(null, 'fake');
-  const handleManual = () => {
-    const vin = window.prompt('Enter VIN');
-    if (vin) {
-      setVin(vin);
-    }
-  };
-
-  // On mount, get a vin if there wasn't already one in the path
-  useEffect(() => {
-    if (!vin) {
-      handleReal();
-    }
-  }, []);
-
-  // Make sure URL matches the current vin
-  useEffect(() => {
-    const desiredURL = vin ? `/vin/${vin}` : '/';
-    if (window.location.pathname !== desiredURL) {
-      window.history.pushState({}, document.title, desiredURL);
-    }
-  });
-
-  // Listen for the back button to keep the vin in sync
-  useEffect(
-    () => {
-      const matchStateToURL = event => {
-        setVin(getVINfromPath(event.target.location.pathname));
-      };
-      window.addEventListener('popstate', matchStateToURL);
-      return () => window.removeEventListener('popstate', matchStateToURL);
-    },
-    [vin]
-  );
+  // If there is no initial vin, load a real one
+  useEffect(() => vin || loadVin('real'), []);
 
   return (
     <div className="App">
       <VinButtons
-        onReal={handleReal}
-        onFake={handleFake}
-        onManual={handleManual}
+        onReal={() => loadVin('real')}
+        onFake={() => loadVin('fake')}
+        onManual={() => setVin(window.prompt('Enter VIN') || null)}
       />
       <BarcodeDisplay vin={vin} loading={loading} />
       <Info />
@@ -115,4 +67,48 @@ const GitHubLink = () => (
   </a>
 );
 
-export default App;
+////////////////////////////////////////////////////////////////////////////////
+// Helpers
+
+const fetchVin = type =>
+  fetch(`/.netlify/functions/randomVin?type=${type}`)
+    .then(res => res.json())
+    .then(({ vin }) => vin);
+
+const vinFromPath = (path = window.location.pathname) =>
+  path.split('/').slice(-1)[0] || null;
+
+////////////////////////////////////////////////////////////////////////////////
+// Custom hooks
+
+const useLoadingState = () => {
+  const [loading, setLoading] = useState(false);
+  const withLoadingState = async task => {
+    setLoading(true);
+    await task();
+    setLoading(false);
+  };
+  return [loading, withLoadingState];
+};
+
+const useUrlSync = (vin, setVin) => {
+  // vin -> url
+  useEffect(() => {
+    const desiredURL = vin ? `/vin/${vin}` : '/';
+    if (window.location.pathname !== desiredURL) {
+      window.history.pushState({}, document.title, desiredURL);
+    }
+  });
+
+  // url -> vin
+  useEventListener('popstate', event =>
+    setVin(vinFromPath(event.target.location.pathname))
+  );
+};
+
+const useEventListener = (eventName, callback) => {
+  useEffect(() => {
+    window.addEventListener(eventName, callback);
+    return () => window.removeEventListener(eventName, callback);
+  }, []);
+};
