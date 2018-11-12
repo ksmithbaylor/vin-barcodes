@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Barcode from 'react-barcode';
 import { useLoadingState, useUrlSync } from './customHooks';
 import { vinFromPath, fetchVin } from './helpers';
 import './App.css';
 
 export default () => {
-  const [vin, setVin] = useState(vinFromPath());
-  const [loading, withLoadingState] = useLoadingState();
-
-  // Function to fetch a new vin
-  const loadVin = type => withLoadingState(() => fetchVin(type).then(setVin));
+  const [vin, setVin, loading, loadVin] = useLoadingState(
+    vinFromPath(),
+    fetchVin
+  );
 
   // Keep the url in sync with the displayed vin
   useUrlSync(vin ? `/vin/${vin}` : '/', path => setVin(vinFromPath(path)));

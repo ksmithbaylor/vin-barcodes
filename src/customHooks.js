@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
 
-export const useLoadingState = () => {
-  const [loading, setLoading] = useState(false);
-  const withLoadingState = async task => {
-    setLoading(true);
-    await task();
-    setLoading(false);
+export const useLoadingState = (initial, loadTask) => {
+  const [{ state, loading }, setState] = useState({
+    state: initial,
+    loading: false
+  });
+
+  const setDirectly = newValue => setState({ state: newValue, loading });
+  const loadAndSet = (...args) => {
+    setState({ state, loading: true });
+    loadTask(...args).then(result =>
+      setState({ state: result, loading: false })
+    );
   };
-  return [loading, withLoadingState];
+
+  return [state, setDirectly, loading, loadAndSet];
 };
 
 export const useUrlSync = (desiredURL, update) => {
