@@ -15,7 +15,7 @@ export default () => {
   useUrlSync(vin ? `/vin/${vin}` : '/', path => setVin(vinFromPath(path)));
 
   // If there is no initial vin, load a real one
-  useEffect(() => vin || loadVin('real'), []);
+  useEffect(() => void (vin || loadVin('real')), []);
 
   return (
     <div className="App">
