@@ -67,6 +67,7 @@ button + button {
     margin-top: 0.5rem;
   }
 }
+
 .BarcodeDisplay {
   margin-top: 2rem;
   height: 145px;
@@ -74,6 +75,18 @@ button + button {
   align-items: center;
   justify-content: center;
   width: 90%;
+}
+
+.CopyButton {
+  background-color: #555;
+  font-size: 16px;
+  width: 10em;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+.CopyButton:active {
+  background-color: #444;
 }
 
 footer {

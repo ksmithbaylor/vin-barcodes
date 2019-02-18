@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Barcode from 'react-barcode';
 import { useLoadingState, useUrlSync } from './customHooks';
 import { vinFromPath, fetchVin } from './helpers';
+import Clipboard from 'clipboard';
 import './App.css';
 
 export default () => {
@@ -29,6 +30,7 @@ export default () => {
         }}
       />
       <BarcodeDisplay vin={vin} loading={loading} />
+      <CopyButton vin={vin} />
       <Info />
     </div>
   );
@@ -46,6 +48,31 @@ const BarcodeDisplay = ({ vin, loading }) => (
     {loading ? <Spinner /> : vin ? <Barcode value={vin} /> : null}
   </div>
 );
+
+const CopyButton = ({ vin }) => {
+  const [initialButtonText, copiedText] = ['Copy to clipboard', 'Copied!'];
+  const [buttonText, setButtonText] = useState(initialButtonText);
+  const button = useRef(null);
+
+  useEffect(() => {
+    const clipboard = new Clipboard(button.current);
+    return () => clipboard.destroy();
+  }, []);
+
+  return (
+    <button
+      className="CopyButton"
+      ref={button}
+      data-clipboard-text={vin}
+      onClick={() => {
+        setButtonText(copiedText);
+        setTimeout(() => setButtonText(initialButtonText), 1000);
+      }}
+    >
+      {buttonText}
+    </button>
+  );
+};
 
 const Spinner = () => <div className="spinner" />;
 

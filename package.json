@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "clipboard": "^2.0.4",
     "isomorphic-fetch": "^2.2.1",
     "netlify-lambda": "^1.4.2",
     "react": "^16.8.2",
