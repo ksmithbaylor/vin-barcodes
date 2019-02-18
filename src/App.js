@@ -36,9 +36,8 @@ export default () => {
 
 const VinButtons = ({ onReal, onFake, onManual }) => (
   <div className="VinButtons">
-    <button onClick={onFake}>Fake</button>
-    <button onClick={onReal}>Real</button>
-    <button onClick={onManual}>Manual</button>
+    <button onClick={onReal}>Get a VIN</button>
+    <button onClick={onManual}>Enter a VIN</button>
   </div>
 );
 
