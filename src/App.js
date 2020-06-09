@@ -78,7 +78,16 @@ const Spinner = () => <div className="spinner" />;
 
 const Info = () => (
   <footer>
-    Driven by <RandomVinLink />. Made by Kevin Smith. Code on <GitHubLink />.
+    <p>
+      Driven by <RandomVinLink />. Made by Kevin Smith. Code on <GitHubLink />.
+    </p>
+    <p>
+      If this tool is useful to you, you can{' '}
+      <a href="https://ko-fi.com/ksmithbaylor" target="_blank">
+        buy me a coffee
+      </a>
+      !
+    </p>
     <br />
   </footer>
 );
