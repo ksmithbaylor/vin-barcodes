@@ -12,7 +12,7 @@ export default () => {
   );
 
   // Keep the url in sync with the displayed vin
-  useUrlSync(vin ? `/vin/${vin}` : '/', path => setVin(vinFromPath(path)));
+  useUrlSync(vin ? `/vin/${vin}` : '/', (path) => setVin(vinFromPath(path)));
 
   // If there is no initial vin, load a real one
   useEffect(() => void (vin || loadVin('real')), []);
